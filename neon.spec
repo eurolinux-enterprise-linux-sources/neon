@@ -1,15 +1,16 @@
 Summary: An HTTP and WebDAV client library
 Name: neon
 Version: 0.30.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.webdav.org/neon/
 Source0: http://www.webdav.org/neon/neon-%{version}.tar.gz
 Patch0: neon-0.27.0-multilib.patch
+Patch1: neon-0.30.0-pkcs11.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: expat-devel, gnutls-devel, zlib-devel, krb5-devel, libproxy-devel
-BuildRequires: pkgconfig, pakchois-devel
+BuildRequires: pkgconfig, pakchois-devel, autoconf, automake, libtool
 Requires: ca-certificates
 
 %description
@@ -33,8 +34,10 @@ The development library for the C language HTTP and WebDAV client library.
 %prep
 %setup -q
 %patch0 -p1 -b .multilib
+%patch1 -p1 -b .pkcs11
 
 %build
+./autogen.sh
 export CC="%{__cc} -pthread"
 # Use standard system CA bundle:
 %define cabundle %{_sysconfdir}/pki/tls/certs/ca-bundle.crt
@@ -76,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Fri Mar 22 2019 Joe Orton <jorton@redhat.com> - 0.30.0-4
+- fix PKCS#11 support (#1482769)
+
 * Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 0.30.0-3
 - Mass rebuild 2014-01-24
 
