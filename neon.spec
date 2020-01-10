@@ -1,12 +1,13 @@
 Summary: An HTTP and WebDAV client library
 Name: neon
 Version: 0.29.3
-Release: 1.2%{?dist}
+Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.webdav.org/neon/
 Source0: http://www.webdav.org/neon/neon-%{version}.tar.gz
 Patch0: neon-0.27.0-multilib.patch
+Patch1: neon-0.29.3-sni.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: expat-devel, gnutls-devel, zlib-devel, krb5-devel, libproxy-devel
 BuildRequires: pkgconfig, pakchois-devel
@@ -35,6 +36,7 @@ The development library for the C language HTTP and WebDAV client library.
 %prep
 %setup -q
 %patch0 -p1 -b .multilib
+%patch1 -p1 -b .sni
 
 %build
 export CC="%{__cc} -pthread"
@@ -78,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Tue Mar  6 2012 Joe Orton <jorton@redhat.com> - 0.29.3-2
+- fix SNI support (#798636)
+
 * Thu Jun 24 2010 Joe Orton <jorton@redhat.com> - 0.29.3-1.2
 - fix Release (#604555)
 
